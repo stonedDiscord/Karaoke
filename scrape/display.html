@@ -47,19 +47,21 @@
 </head>
 
 <body>
+    <div id="loading-bar">
+        <div id="load-progress"></div>
+    </div>
     <form class="search-form">
         <label for="title-search">Search:</label>
         <input type="text" id="search" class="search-input">
     </form>
-    <div id="loading-bar">
-        <div id="load-progress"></div>
-    </div>
     <table id="music-table">
         <thead>
             <tr>
                 <th>Request</th>
-                <th>Title</th>
                 <th>Artist</th>
+                <th>Title</th>
+                <th>🅿️</th>
+                <th>🧒</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -73,19 +75,48 @@
             if (xhr.status === 200) {
                 var data = xhr.responseText.split('\n');
                 var tableBody = document.querySelector('#music-table tbody');
-                data.forEach(function (line) {
+                data.forEach(function (line, i) {
+                    progressWidth = 50 + (Math.round((i / data.length) * 50));
+                    document.getElementById('load-progress').style.width = progressWidth + '%';
                     var obj = JSON.parse(line);
                     if (obj.data.hasOwnProperty('artistCode')) {
                         var row = document.createElement('tr');
                         var cellElement = document.createElement('td');
                         cellElement.textContent = obj.data.requestNo;
+                        cellElement.title = obj.data.firstLine;
                         row.appendChild(cellElement);
+
                         var cellElement = document.createElement('td');
                         cellElement.textContent = obj.data.artist;
+                        cellElement.title = obj.data.artistCode;
                         row.appendChild(cellElement);
+
                         var cellElement = document.createElement('td');
                         cellElement.textContent = obj.data.title;
+                        cellElement.title = obj.data.titleYomi_Kana;
                         row.appendChild(cellElement);
+
+                        var cellElement = document.createElement('td');
+                        var check = "❌";
+                        var rel = "Never";
+                        obj.list[0].kModelMusicInfoList[0].eachModelMusicInfoList.forEach(function (machine, i) {
+                            if (machine.karaokeModelNum == "12")
+                            {
+                                check = "✅";
+                                rel = machine.releaseDate;
+                            }
+                            
+                        });
+                        cellElement.textContent = check;
+                        cellElement.title = rel;
+                        row.appendChild(cellElement);
+
+                        var cellElement = document.createElement('td');
+                        var check = "";
+                        if(obj.list[0].kModelMusicInfoList[0].kidsFlag == "1") { check = "✅";} else { check = "❌";}
+                        cellElement.textContent = check;
+                        row.appendChild(cellElement);
+
                         tableBody.appendChild(row);
                     }
                 });
@@ -99,9 +130,10 @@
         xhr.send();
 
         var progressWidth = 0;
+        document.getElementById('load-progress').style.width = progressWidth + '%';
         xhr.upload.onprogress = function (e) {
             if (e.lengthComputable) {
-                progressWidth = Math.round((e.loaded / e.total) * 100);
+                progressWidth = Math.round((e.loaded / e.total) * 50);
                 document.getElementById('load-progress').style.width = progressWidth + '%';
             }
         };
