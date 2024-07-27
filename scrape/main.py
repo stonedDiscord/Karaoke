@@ -7,7 +7,7 @@ url = "https://www.clubdam.com/dkwebsys/search-api/GetMusicDetailInfoApi"
 
 # Function to generate request numbers
 def generate_request_numbers():
-    for i in range(1164, 9999):
+    for i in range(1000, 9999):
         for j in range(100):
             yield f"{i:04d}-{j:02d}"
 
@@ -34,6 +34,7 @@ with open(text_file, 'a', encoding='utf-8') as file:
             print(request_no)
             data = fetch_data(request_no)
             if data:
+                print(data)
                 parsed = json.dumps(data, ensure_ascii=False)
                 if "artistCode" in parsed:
                     file.write(parsed + '\n')
