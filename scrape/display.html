@@ -30,6 +30,12 @@
             border-bottom: 1px solid #ddd;
         }
 
+        th {
+            position: sticky;
+            top: 20px;
+            /* 0px if you don't have a navbar, but something is required */
+        }
+
         tr:hover {
             background-color: #f5f5f5;
         }
@@ -60,8 +66,9 @@
                 <th>Request</th>
                 <th>Artist</th>
                 <th>Title</th>
-                <th>🅿️</th>
-                <th>🧒</th>
+                <th title="PremierDAM">🅿️</th>
+                <th title="Kids">🧒</th>
+                <th title="Anime">🍡</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -82,7 +89,10 @@
                     if (obj.data.hasOwnProperty('artistCode')) {
                         var row = document.createElement('tr');
                         var cellElement = document.createElement('td');
-                        cellElement.textContent = obj.data.requestNo;
+                        var link = document.createElement('a'); 
+                        link.textContent = obj.data.requestNo;
+                        link.href = "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo="+obj.data.requestNo;
+                        cellElement.appendChild(link);
                         cellElement.title = obj.data.firstLine;
                         row.appendChild(cellElement);
 
@@ -100,12 +110,11 @@
                         var check = "❌";
                         var rel = "Never";
                         obj.list[0].kModelMusicInfoList[0].eachModelMusicInfoList.forEach(function (machine, i) {
-                            if (machine.karaokeModelNum == "12")
-                            {
+                            if (machine.karaokeModelNum == "12") {
                                 check = "✅";
                                 rel = machine.releaseDate;
                             }
-                            
+
                         });
                         cellElement.textContent = check;
                         cellElement.title = rel;
@@ -113,8 +122,25 @@
 
                         var cellElement = document.createElement('td');
                         var check = "";
-                        if(obj.list[0].kModelMusicInfoList[0].kidsFlag == "1") { check = "✅";} else { check = "❌";}
+                        if (obj.list[0].kModelMusicInfoList[0].kidsFlag == "1") { check = "✅"; } else { check = "❌"; }
                         cellElement.textContent = check;
+                        row.appendChild(cellElement);
+
+                        var cellElement = document.createElement('td');
+                        var check = "❓";
+                        obj.list[0].kModelMusicInfoList[0].eachModelMusicInfoList.forEach(function (machine, i) {
+                            if (machine.karaokeModelNum == "12") {
+                                if (machine.animeFlag == "1") {
+                                    check = "✅";
+                                }
+                                else {
+                                    check = "❌";
+                                }
+                            }
+
+                        });
+                        cellElement.textContent = check;
+                        cellElement.title = rel;
                         row.appendChild(cellElement);
 
                         tableBody.appendChild(row);
