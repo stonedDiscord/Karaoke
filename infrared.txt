@@ -1,0 +1,174 @@
+9876-54 start
+
+
+
+Protocol=NEC Address=0x2DD1 Command=0x1 Raw-Data=0xFE012DD1 32 bits LSB first
+
+Protocol=NEC Address=0x2DD1 Command=0x8 Raw-Data=0xF7082DD1 32 bits LSB first
+
+Protocol=NEC2 Address=0x2DD1 Command=0x37 Repeat gap=59950us Raw-Data=0xC8372DD1 32 bits LSB first
+
+Protocol=NEC2 Address=0x2DD1 Command=0x35 Repeat gap=59950us Raw-Data=0xCA352DD1 32 bits LSB first
+
+
+
+Play 1234-56
+
+Protocol=NEC Address=0x2DD1 Command=0x8 Raw-Data=0xF7082DD1 32 bits LSB first
+
+Send with: IrSender.sendNEC(0x2DD1, 0x8, <numberOfRepeats>);
+
+Raw result in internal ticks (50 us) - with leading gap
+rawData[68]: 
+ -65535
+ +177,-89
+ +11,-33 +12,-12 +10,-11 +11,-11
+ +11,-34 +10,-12 +11,-34 +10,-34
+ +10,-34 +11,-12 +10,-34 +10,-34
+ +11,-12 +10,-33 +11,-12 +10,-12
+ +10,-12 +11,-11 +11,-12 +10,-34
+ +11,-11 +11,-11 +11,-11 +11,-12
+ +10,-34 +11,-33 +11,-34 +10,-12
+ +10,-34 +11,-34 +10,-34 +10,-35
+ +10
+Sum: 1342
+Raw result in microseconds - with leading gap
+rawData[68]: 
+ -3276750
+ +8850,-4450
+ + 550,-1650 + 600,- 600 + 500,- 550 + 550,- 550
+ + 550,-1700 + 500,- 600 + 550,-1700 + 500,-1700
+ + 500,-1700 + 550,- 600 + 500,-1700 + 500,-1700
+ + 550,- 600 + 500,-1650 + 550,- 600 + 500,- 600
+ + 500,- 600 + 550,- 550 + 550,- 600 + 500,-1700
+ + 550,- 550 + 550,- 550 + 550,- 550 + 550,- 600
+ + 500,-1700 + 550,-1650 + 550,-1700 + 500,- 600
+ + 500,-1700 + 550,-1700 + 500,-1700 + 500,-1750
+ + 500
+Sum: 67100
+
+Result as internal 8bit ticks (50 us) array - compensated with MARK_EXCESS_MICROS=20
+uint8_t rawTicks[67] = {177,89, 11,33, 12,12, 10,11, 11,11, 11,34, 10,12, 11,34, 10,34, 10,34, 11,12, 10,34, 10,34, 11,12, 10,33, 11,12, 10,12, 10,12, 11,11, 11,12, 10,34, 11,11, 11,11, 11,11, 11,12, 10,34, 11,33, 11,34, 10,12, 10,34, 11,34, 10,34, 10,35, 10};  // Protocol=NEC Address=0x2DD1 Command=0x8 Raw-Data=0xF7082DD1 32 bits LSB first
+
+Result as microseconds array - compensated with MARK_EXCESS_MICROS=20
+uint16_t rawData[67] = {8830,4470, 530,1670, 580,620, 480,570, 530,570, 530,1720, 480,620, 530,1720, 480,1720, 480,1720, 530,620, 480,1720, 480,1720, 530,620, 480,1670, 530,620, 480,620, 480,620, 530,570, 530,620, 480,1720, 530,570, 530,570, 530,570, 530,620, 480,1720, 530,1670, 530,1720, 480,620, 480,1720, 530,1720, 480,1720, 480,1770, 480};  // Protocol=NEC Address=0x2DD1 Command=0x8 Raw-Data=0xF7082DD1 32 bits LSB first
+
+uint16_t address = 0x2DD1;
+uint16_t command = 0x8;
+uint32_t rawData = 0xF7082DD1;
+
+
+Pronto Hex as string
+char prontoData[] = "0000 006D 0022 0000 0155 00AA 0016 003F 0018 0016 0014 0014 0016 0014 0016 0041 0014 0016 0016 0041 0014 0041 0014 0041 0016 0016 0014 0041 0014 0041 0016 0016 0014 003F 0016 0016 0014 0016 0014 0016 0016 0014 0016 0016 0014 0041 0016 0014 0016 0014 0016 0014 0016 0016 0014 0041 0016 003F 0016 0041 0014 0016 0014 0041 0016 0041 0014 0041 0014 0043 0014 06C3 ";
+
+
+Protocol=NEC2 Address=0x2DD1 Command=0x33 Repeat gap=59950us Raw-Data=0xCC332DD1 32 bits LSB first
+
+Send with: IrSender.sendNEC2(0x2DD1, 0x33, <numberOfRepeats>);
+
+Raw result in internal ticks (50 us) - with leading gap
+rawData[68]: 
+ -1199
+ +177,-90
+ +10,-33 +11,-13 +10,-12 +10,-12
+ +10,-34 +10,-12 +11,-33 +11,-34
+ +10,-34 +11,-12 +10,-34 +10,-34
+ +10,-13 +10,-33 +11,-12 +10,-12
+ +10,-34 +11,-33 +11,-12 +10,-12
+ +10,-34 +11,-34 +10,-12 +10,-12
+ +11,-12 +10,-11 +11,-34 +10,-34
+ +11,-12 +10,-12 +10,-34 +10,-35
+ +10
+Sum: 1342
+Raw result in microseconds - with leading gap
+rawData[68]: 
+ -59950
+ +8850,-4500
+ + 500,-1650 + 550,- 650 + 500,- 600 + 500,- 600
+ + 500,-1700 + 500,- 600 + 550,-1650 + 550,-1700
+ + 500,-1700 + 550,- 600 + 500,-1700 + 500,-1700
+ + 500,- 650 + 500,-1650 + 550,- 600 + 500,- 600
+ + 500,-1700 + 550,-1650 + 550,- 600 + 500,- 600
+ + 500,-1700 + 550,-1700 + 500,- 600 + 500,- 600
+ + 550,- 600 + 500,- 550 + 550,-1700 + 500,-1700
+ + 550,- 600 + 500,- 600 + 500,-1700 + 500,-1750
+ + 500
+Sum: 67100
+
+Result as internal 8bit ticks (50 us) array - compensated with MARK_EXCESS_MICROS=20
+uint8_t rawTicks[67] = {177,90, 10,33, 11,13, 10,12, 10,12, 10,34, 10,12, 11,33, 11,34, 10,34, 11,12, 10,34, 10,34, 10,13, 10,33, 11,12, 10,12, 10,34, 11,33, 11,12, 10,12, 10,34, 11,34, 10,12, 10,12, 11,12, 10,11, 11,34, 10,34, 11,12, 10,12, 10,34, 10,35, 10};  // Protocol=NEC2 Address=0x2DD1 Command=0x33 Repeat gap=59950us Raw-Data=0xCC332DD1 32 bits LSB first
+
+Result as microseconds array - compensated with MARK_EXCESS_MICROS=20
+uint16_t rawData[67] = {8830,4520, 480,1670, 530,670, 480,620, 480,620, 480,1720, 480,620, 530,1670, 530,1720, 480,1720, 530,620, 480,1720, 480,1720, 480,670, 480,1670, 530,620, 480,620, 480,1720, 530,1670, 530,620, 480,620, 480,1720, 530,1720, 480,620, 480,620, 530,620, 480,570, 530,1720, 480,1720, 530,620, 480,620, 480,1720, 480,1770, 480};  // Protocol=NEC2 Address=0x2DD1 Command=0x33 Repeat gap=59950us Raw-Data=0xCC332DD1 32 bits LSB first
+
+uint16_t address = 0x2DD1;
+uint16_t command = 0x33;
+uint32_t rawData = 0xCC332DD1;
+
+
+Pronto Hex as string
+char prontoData[] = "0000 006D 0022 0000 0155 00AC 0014 003F 0016 0018 0014 0016 0014 0016 0014 0041 0014 0016 0016 003F 0016 0041 0014 0041 0016 0016 0014 0041 0014 0041 0014 0018 0014 003F 0016 0016 0014 0016 0014 0041 0016 003F 0016 0016 0014 0016 0014 0041 0016 0041 0014 0016 0014 0016 0016 0016 0014 0014 0016 0041 0014 0041 0016 0016 0014 0016 0014 0041 0014 0043 0014 06C3 ";
+
+
+Protocol=NEC2 Address=0x2DD1 Command=0x35 Repeat gap=60000us Raw-Data=0xCA352DD1 32 bits LSB first
+
+Send with: IrSender.sendNEC2(0x2DD1, 0x35, <numberOfRepeats>);
+
+Raw result in internal ticks (50 us) - with leading gap
+rawData[68]: 
+ -1200
+ +176,-90
+ +10,-34 +10,-13 +10,-12 +10,-11
+ +11,-34 +10,-12 +11,-33 +11,-34
+ +10,-34 +11,-12 +10,-34 +10,-34
+ +10,-12 +11,-33 +11,-12 +10,-12
+ +10,-33 +12,-12 +10,-34 +10,-12
+ +10,-34 +11,-34 +10,-12 +10,-12
+ +11,-11 +11,-33 +11,-12 +10,-34
+ +11,-12 +10,-11 +11,-33 +11,-34
+ +11
+Sum: 1341
+Raw result in microseconds - with leading gap
+rawData[68]: 
+ -60000
+ +8800,-4500
+ + 500,-1700 + 500,- 650 + 500,- 600 + 500,- 550
+ + 550,-1700 + 500,- 600 + 550,-1650 + 550,-1700
+ + 500,-1700 + 550,- 600 + 500,-1700 + 500,-1700
+ + 500,- 600 + 550,-1650 + 550,- 600 + 500,- 600
+ + 500,-1650 + 600,- 600 + 500,-1700 + 500,- 600
+ + 500,-1700 + 550,-1700 + 500,- 600 + 500,- 600
+ + 550,- 550 + 550,-1650 + 550,- 600 + 500,-1700
+ + 550,- 600 + 500,- 550 + 550,-1650 + 550,-1700
+ + 550
+Sum: 67050
+
+Result as internal 8bit ticks (50 us) array - compensated with MARK_EXCESS_MICROS=20
+uint8_t rawTicks[67] = {176,90, 10,34, 10,13, 10,12, 10,11, 11,34, 10,12, 11,33, 11,34, 10,34, 11,12, 10,34, 10,34, 10,12, 11,33, 11,12, 10,12, 10,33, 12,12, 10,34, 10,12, 10,34, 11,34, 10,12, 10,12, 11,11, 11,33, 11,12, 10,34, 11,12, 10,11, 11,33, 11,34, 11};  // Protocol=NEC2 Address=0x2DD1 Command=0x35 Repeat gap=60000us Raw-Data=0xCA352DD1 32 bits LSB first
+
+Result as microseconds array - compensated with MARK_EXCESS_MICROS=20
+uint16_t rawData[67] = {8780,4520, 480,1720, 480,670, 480,620, 480,570, 530,1720, 480,620, 530,1670, 530,1720, 480,1720, 530,620, 480,1720, 480,1720, 480,620, 530,1670, 530,620, 480,620, 480,1670, 580,620, 480,1720, 480,620, 480,1720, 530,1720, 480,620, 480,620, 530,570, 530,1670, 530,620, 480,1720, 530,620, 480,570, 530,1670, 530,1720, 530};  // Protocol=NEC2 Address=0x2DD1 Command=0x35 Repeat gap=60000us Raw-Data=0xCA352DD1 32 bits LSB first
+
+uint16_t address = 0x2DD1;
+uint16_t command = 0x35;
+uint32_t rawData = 0xCA352DD1;
+
+
+Pronto Hex as string
+char prontoData[] = "0000 006D 0022 0000 0153 00AC 0014 0041 0014 0018 0014 0016 0014 0014 0016 0041 0014 0016 0016 003F 0016 0041 0014 0041 0016 0016 0014 0041 0014 0041 0014 0016 0016 003F 0016 0016 0014 0016 0014 003F 0018 0016 0014 0041 0014 0016 0014 0041 0016 0041 0014 0016 0014 0016 0016 0014 0016 003F 0016 0016 0014 0041 0016 0016 0014 0014 0016 003F 0016 0041 0016 06C3 ";
+
+
+tempo up 
+Protocol=NEC Address=0x2DD1 Command=0x20 Raw-Data=0xDF202DD1 32 bits LSB first
+tempo down 
+Protocol=NEC Address=0x2DD1 Command=0x21 Raw-Data=0xDE212DD1 32 bits LSB first
+
+key up
+Protocol=NEC Address=0x2DD1 Command=0x4 Raw-Data=0xFB042DD1 32 bits LSB first
+key down
+Protocol=NEC Address=0x2DD1 Command=0x5 Raw-Data=0xFA052DD1 32 bits LSB first
+
+Abort
+Protocol=NEC Address=0x2DD1 Command=0x0 Raw-Data=0xFF002DD1 32 bits LSB first
+Protocol=NEC Address=0x2DD1 Command=0x1 Raw-Data=0xFE012DD1 32 bits LSB first
+
