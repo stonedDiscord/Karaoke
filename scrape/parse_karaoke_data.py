@@ -2,8 +2,7 @@ import json
 import sqlite3
 
 # Function to create a table for a specific karaoke model
-def create_model_table(conn, model_name):
-    cursor = conn.cursor()
+def create_model_table(cursor, model_name):
     table_name = f'karaoke_{model_name.replace(" ", "_").replace(".", "").replace("-", "_")}'
     cursor.execute(f'''
     CREATE TABLE IF NOT EXISTS {table_name} (
@@ -36,15 +35,13 @@ def create_model_table(conn, model_name):
         myListFlag INTEGER,
         titleAvailable INTEGER
     )''')
-    conn.commit()
     return table_name
 
 # Function to insert data into the respective model table
-def insert_data(conn, data):
-    cursor = conn.cursor()
-    
+def insert_data(cursor, data):    
     # Extracting basic information
     requestNo = data['data'].get('requestNo')
+    print(requestNo)
     statusCode = data['result'].get('statusCode')
     message = data['result'].get('message')
     artistCode = data['data'].get('artistCode')
@@ -58,7 +55,9 @@ def insert_data(conn, data):
         for kModelMusicInfo in item['kModelMusicInfoList']:
             for model in kModelMusicInfo['eachModelMusicInfoList']:
                 titleAvailable = 1 if model['karaokeModelNum'] else 0
-                table_name = create_model_table(conn, model['karaokeModelName'])
+                if not hasattr(model, 'shift'):
+                    model['shift'] = 0
+                table_name = create_model_table(cursor, model['karaokeModelName'])
                 cursor.execute(f'''
                 INSERT INTO {table_name} (
                     requestNo, statusCode, message, artistCode, artist, title, titleYomi_Kana, firstLine,
@@ -78,12 +77,13 @@ def insert_data(conn, data):
                     model['duetFlag'], model['guideVocalFlag'], model['prookeFlag'], model['scoreFlag'], model['duetDxFlag'], model['damTomoMovieFlag'],
                     model['damTomoRecordingFlag'], model['myListFlag'], titleAvailable
                 ))
-    conn.commit()
+    
 
 # Main function to process the file
 def main():
     # Connect to the SQLite database
     conn = sqlite3.connect('karaoke.db')
+    cursor = conn.cursor()
 
     # Open the file and process each line
     with open('music_details.txt', 'r', encoding='utf-8') as file:
@@ -93,6 +93,7 @@ def main():
             if 'artistCode' not in data['data']:
                 continue
             insert_data(conn, data)
+            conn.commit()
     
     conn.close()
 
