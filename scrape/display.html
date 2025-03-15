@@ -3,8 +3,11 @@
 
 <head>
     <title>Music Search</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" 
+      content="text/html; charset=utf-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/sql/sql.min.js"></script>
+    <script src="sql-wasm.js"></script>
     <style>
         #loading-bar {
             width: 100%;
@@ -67,8 +70,7 @@
                 <th>Request</th>
                 <th>Artist</th>
                 <th>Title</th>
-                <th title="PremierDAM">🅿️</th>
-                <th title="Kids">🧒</th>
+                <th>Release</th>
                 <th title="Anime">🍡</th>
             </tr>
         </thead>
@@ -77,102 +79,71 @@
 
     <script>
         function parseLine(obj) {
-            if (obj.data.hasOwnProperty('artistCode')) {
-                var tableBody = document.querySelector('#music-table tbody');
+            var tableBody = document.querySelector('#music-table tbody');
 
-                var row = document.createElement('tr');
-                var cellElement = document.createElement('td');
-                var link = document.createElement('a');
-                link.textContent = obj.data.requestNo;
-                link.href = "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=" + obj.data.requestNo;
-                cellElement.appendChild(link);
-                cellElement.title = obj.data.firstLine;
-                row.appendChild(cellElement);
+            var row = document.createElement('tr');
+            var cellElement = document.createElement('td');
+            var link = document.createElement('a');
+            link.textContent = obj[0];
+            link.href = "https://www.clubdam.com/karaokesearch/songleaf.html?requestNo=" + obj[0];
+            cellElement.appendChild(link);
+            cellElement.title = obj[7];
+            row.appendChild(cellElement);
 
-                var cellElement = document.createElement('td');
-                cellElement.textContent = obj.data.artist;
-                cellElement.title = obj.data.artistCode;
-                row.appendChild(cellElement);
+            var cellElement = document.createElement('td');
+            cellElement.textContent = obj[4]
+            cellElement.title = obj[3];
+            row.appendChild(cellElement);
 
-                var cellElement = document.createElement('td');
-                cellElement.textContent = obj.data.title;
-                cellElement.title = obj.data.titleYomi_Kana;
-                row.appendChild(cellElement);
+            var cellElement = document.createElement('td');
+            cellElement.textContent = obj[5];
+            cellElement.title = obj[6];
+            row.appendChild(cellElement);
 
-                var cellElement = document.createElement('td');
-                var check = "❌";
-                var rel = "Never";
-                obj.list[0].kModelMusicInfoList[0].eachModelMusicInfoList.forEach(function (machine, i) {
-                    if (machine.karaokeModelNum == "12") {
-                        check = "✅";
-                        rel = machine.releaseDate;
-                    }
+            var cellElement = document.createElement('td');
+            var rel = obj[8];
+            cellElement.textContent = rel;
+            cellElement.title = rel;
+            row.appendChild(cellElement);
 
-                });
-                cellElement.textContent = check;
-                cellElement.title = rel;
-                row.appendChild(cellElement);
-
-                var cellElement = document.createElement('td');
-                var check = "";
-                if (obj.list[0].kModelMusicInfoList[0].kidsFlag == "1") { check = "✅"; } else { check = "❌"; }
-                cellElement.textContent = check;
-                row.appendChild(cellElement);
-
-                var cellElement = document.createElement('td');
-                var check = "❓";
-                obj.list[0].kModelMusicInfoList[0].eachModelMusicInfoList.forEach(function (machine, i) {
-                    if (machine.karaokeModelNum == "12") {
-                        if (machine.animeFlag == "1") {
-                            check = "✅";
-                        }
-                        else {
-                            check = "❌";
-                        }
-                    }
-
-                });
-                cellElement.textContent = check;
-                cellElement.title = rel;
-                row.appendChild(cellElement);
-
-                tableBody.appendChild(row);
+            var cellElement = document.createElement('td');
+            var check = "❓";
+            if (obj[15] == "1") {
+                check = "✅";
             }
+            else {
+                check = "❌";
+            }
+
+            cellElement.textContent = check;
+            cellElement.title = rel;
+            row.appendChild(cellElement);
+
+            tableBody.appendChild(row);
+
+            const percent = Number(obj[0].replace("-","")) / 99999
+            document.getElementById('load-progress').style.width = percent+'%';
         }
 
-        var progressWidth = 0;
-        document.getElementById('load-progress').style.width = progressWidth + '%';
+        document.getElementById('load-progress').style.width = '0%';
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'music_details.txt');
-        xhr.responseType = 'text';
-        xhr.upload.onprogress = function (e) {
-            if (e.lengthComputable) {
-                progressWidth = Math.round((e.loaded / e.total) * 50);
-                document.getElementById('load-progress').style.width = progressWidth + '%';
-            }
-        };
-        document.getElementById('load-progress').style.width = '50%';
+        initSqlJs({ locateFile: filename => `sql-wasm.wasm` }).then(function (SQL) {
+            const xhr = new XMLHttpRequest();
+            // For example: https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite
+            xhr.open('GET', 'premier.db', true);
+            xhr.responseType = 'arraybuffer';
 
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var data = xhr.responseText.split('\n');
-                data.forEach(function (line, i) {
-                    progressWidth = 50 + (Math.round((i / data.length) * 50));
-                    document.getElementById('load-progress').style.width = progressWidth + '%';
-                    parseLine(JSON.parse(line));
-                });
-            } else {
-                console.error('Error downloading file:', xhr.statusText);
-            }
-        };
-        xhr.onerror = function () {
-            console.error('Error downloading file:', xhr.statusText);
-        };
-        xhr.send();
-        
-        document.getElementById('load-progress').style.width = '100%';
-
+            xhr.onload = e => {
+                const uInt8Array = new Uint8Array(xhr.response);
+                const db = new SQL.Database(uInt8Array);
+                const contents = db.exec("SELECT * from karaoke_Premier_DAM");
+                // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
+                contents[0].values.forEach((element) => parseLine(element));
+                document.getElementById('load-progress').style.width = '100%';
+                db.close();
+            };
+            xhr.send();
+        });
 
         $('.search-input').keyup(function () {
             var value = $(this).val().toLowerCase();
